@@ -1,0 +1,9 @@
+### 받기 요청
+POST http://localhost:8080/givetome
+Content-Type: application/json; charset=UTF-8
+X-USER-ID: 17
+X-ROOM-ID: room-1
+
+{"token" : "ECQ"}
+
+###

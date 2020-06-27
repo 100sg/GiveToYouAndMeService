@@ -1,0 +1,9 @@
+### 뿌리기 요청
+POST http://localhost:8080/givetoyou
+Content-Type: application/json; charset=UTF-8
+X-USER-ID: 10
+X-ROOM-ID: room-1
+
+{"giveMoney" : 100, "recieveMens" : 3}
+
+###
