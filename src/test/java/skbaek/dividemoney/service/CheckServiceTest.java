@@ -4,12 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.repository.MoneyGiveRepository;
-import skbaek.dividemoney.repository.MoneyReceiveRepository;
+import skbaek.dividemoney.dto.MoneyGiveRequestDto;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.give.MoneyGiveRepository;
+import skbaek.dividemoney.entity.receive.MoneyReceiveRepository;
 import skbaek.dividemoney.util.DivideUtil;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
 
 @SpringBootTest
 class CheckServiceTest {
@@ -30,19 +31,26 @@ class CheckServiceTest {
         int giveMoney = 10;
         int receiveMens = 5;
 
-        moneyGive = MoneyGive.builder()
-                .userId(userId)
-                .whichRoom(roomId)
-                .token(token)
-                .giveMoney(giveMoney)
-                .recieveMens(receiveMens)
-                .build();
+        MoneyGiveRequestDto dto =
+                MoneyGiveRequestDto.builder()
+                        .userId(userId)
+                        .giveMoney(giveMoney)
+                        .recieveMens(receiveMens)
+                        .giveTime(LocalDateTime.now())
+                        .token(token)
+                        .whichRoom(roomId)
+                        .build();
 
-        moneyReceiveRepository.saveAll( DivideUtil.devideListSet(DivideUtil.divideMoney(moneyGive), moneyGive) );
+        MoneyGive moneyGive = dto.toEntity();
+
+        DivideUtil.devideListSet(DivideUtil.divideMoney(dto), moneyGive);
+
         moneyGiveRepository.save(moneyGive);
     }
+
     @Test
-    void 정보조회_성공() {
+    void 정보조회_실패_본인아님() {
+
 
     }
 }

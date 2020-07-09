@@ -1,13 +1,9 @@
 spring:
-  h2:
-    console:
-      enabled: true
-
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test;
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/studydb?serverTimezone=Asia/Seoul&useSSL=false&autoReconnect=true&verifyServerCertificate=false&allowPublicKeyRetrieval=true&amp;useUnicode=true&characterEncoding=utf8
+    username: root
+    password: skbaek1234
+    driver-class-name: com.mysql.jdbc.Driver
     hikari:
       connection-timeout: 3000
       validation-timeout: 3000
@@ -15,10 +11,9 @@ spring:
       minimum-idle: 5
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    database: h2
-    show-sql: true
     generate-ddl: true
+    show-sql: true
+    database: mysql
+    open-in-view: false
     hibernate:
       ddl-auto: update
-    open-in-view: false

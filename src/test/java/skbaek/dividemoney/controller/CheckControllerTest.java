@@ -1,6 +1,5 @@
 package skbaek.dividemoney.controller;
 
-import org.aspectj.weaver.patterns.IToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +8,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import skbaek.dividemoney.dto.DivideResponseDto;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.repository.MoneyGiveRepository;
-import skbaek.dividemoney.repository.MoneyReceiveRepository;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.give.MoneyGiveRepository;
+import skbaek.dividemoney.entity.receive.MoneyReceiveRepository;
 import skbaek.dividemoney.util.DivideUtil;
 
 import java.time.LocalDateTime;
@@ -74,12 +71,12 @@ class CheckControllerTest {
 
         moneyGiveRepository.saveAll(moneyGive);
 
-        moneyReceiveRepository.saveAll(
-                DivideUtil.devideListSet(
-                    DivideUtil.divideMoney(moneyGive.get(0)),
-                    moneyGive.get(0)
-                )
-        );
+//        moneyReceiveRepository.saveAll(
+//                DivideUtil.devideListSet(
+//                    DivideUtil.divideMoney(moneyGive.get(0)),
+//                    moneyGive.get(0)
+//                )
+//        );
     }
 
     @Test

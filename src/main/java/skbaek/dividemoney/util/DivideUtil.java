@@ -2,19 +2,17 @@ package skbaek.dividemoney.util;
 
 import lombok.extern.slf4j.Slf4j;
 import skbaek.dividemoney.dto.MoneyGiveRequestDto;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.entity.MoneyReceive;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class DivideUtil {
 
-    public static List<Integer> divideMoney(MoneyGive requestDto) {
+    public static List<Integer> divideMoney(MoneyGiveRequestDto requestDto) {
         Random random = new Random();
         List<Integer> moneyList = new ArrayList<>();
 
@@ -22,11 +20,10 @@ public class DivideUtil {
         int recieveMens = requestDto.getRecieveMens();
 
         for(int i = 1; i <= recieveMens; i++){
-            int giveRandomMoney = random.nextInt(remain);
+            int giveRandomMoney =  randomRange(1, remain);
 
             //최소값 보장
-            if(giveRandomMoney == 0) giveRandomMoney++;
-
+//            if(giveRandomMoney == 0) giveRandomMoney++;
 
             if(i == recieveMens) {
                 giveRandomMoney = remain;
@@ -54,15 +51,20 @@ public class DivideUtil {
         int initSize = moneyList.size();
         for(int i=0; i < initSize; i++){
             int combine = random.nextInt(moneyList.size());
-            list.add(MoneyReceive.builder()
+            MoneyReceive mr = MoneyReceive.builder()
                     .receiveCheck(false)
                     .receiveMoney(moneyList.get(combine))
                     .receivedHistory(i+1)
                     .token(moneyGive.getToken())
                     .moneyGive(moneyGive)
-                    .build());
+                    .build();
+            moneyGive.addReceive(mr);
             moneyList.remove(combine);
         }
         return list;
+    }
+
+    public static int randomRange(int min, int max){
+        return (int) (Math.random() * (max - min +1)) + min;
     }
 }

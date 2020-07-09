@@ -2,23 +2,14 @@ package skbaek.dividemoney.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import skbaek.dividemoney.common.ExceptionString;
-import skbaek.dividemoney.dto.MoneyGiveRequestDto;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.entity.MoneyReceive;
-import skbaek.dividemoney.repository.MoneyGiveRepository;
-import skbaek.dividemoney.repository.MoneyReceiveRepository;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
+import skbaek.dividemoney.entity.give.MoneyGiveRepository;
+import skbaek.dividemoney.entity.receive.MoneyReceiveRepository;
 import skbaek.dividemoney.util.DivideUtil;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,8 +40,8 @@ class GiveServiceTest {
                 .recieveMens(receiveMens)
                 .build();
 
-        moneyReceiveRepository.saveAll( DivideUtil.devideListSet(DivideUtil.divideMoney(moneyGive), moneyGive) );
-        moneyGiveRepository.save(moneyGive);
+//        moneyReceiveRepository.saveAll( DivideUtil.devideListSet(DivideUtil.divideMoney(moneyGive), moneyGive) );
+//        moneyGiveRepository.save(moneyGive);
     }
 
     @Test

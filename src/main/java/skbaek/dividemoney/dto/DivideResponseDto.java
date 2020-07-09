@@ -3,8 +3,6 @@ package skbaek.dividemoney.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import skbaek.dividemoney.entity.MoneyReceive;
 
 import java.time.LocalDateTime;
 import java.util.List;

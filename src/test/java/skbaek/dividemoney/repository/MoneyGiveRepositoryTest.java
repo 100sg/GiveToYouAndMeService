@@ -1,17 +1,22 @@
 package skbaek.dividemoney.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.entity.MoneyReceive;
+import skbaek.dividemoney.dto.MoneyGiveRequestDto;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.give.MoneyGiveRepository;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
+import skbaek.dividemoney.entity.receive.MoneyReceiveRepository;
 import skbaek.dividemoney.util.DivideUtil;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -23,52 +28,45 @@ class MoneyGiveRepositoryTest {
     @Autowired
     private MoneyReceiveRepository moneyReceiveRepository;
 
-    @Test
-    void 뿌리기_정보저장_성공() {
+    @BeforeEach
+    void setUp(){
         String token = "abc";
         String roomId = "room-1";
         int userId = 999;
         int giveMoney = 10;
         int receiveMens = 5;
 
-        MoneyGive moneyGive = MoneyGive.builder()
-                .userId(userId)
-                .whichRoom(roomId)
-                .token(token)
-                .giveMoney(giveMoney)
-                .recieveMens(receiveMens)
-                .build();
+        MoneyGiveRequestDto dto =
+                MoneyGiveRequestDto.builder()
+                        .userId(userId)
+                        .giveMoney(giveMoney)
+                        .recieveMens(receiveMens)
+                        .giveTime(LocalDateTime.now())
+                        .token(token)
+                        .whichRoom(roomId)
+                        .build();
+
+        MoneyGive moneyGive = dto.toEntity();
+
+        DivideUtil.devideListSet(DivideUtil.divideMoney(dto), moneyGive);
 
         moneyGiveRepository.save(moneyGive);
-
-        List<Integer> moneyList = DivideUtil.divideMoney(moneyGive);
-
-        moneyReceiveRepository.saveAll(DivideUtil.devideListSet(moneyList,moneyGive));
-
     }
 
     @Test
-    void 뿌리기_정보저장_실패() {
-        String token = "abc";
-        int userId = 999;
-        String roomId = "room-1";
-        int giveMoney = 4;
-        int receiveMens = 5;
+    void 뿌리기_저장_성공() {
+        assertThat(moneyGiveRepository.findAll()).isNotEmpty();
+        assertThat(moneyReceiveRepository.findAll()).isNotEmpty();
+    }
 
-        MoneyGive moneyGive = MoneyGive.builder()
-                .userId(userId)
-                .whichRoom(roomId)
-                .token(token)
-                .giveMoney(giveMoney)
-                .recieveMens(receiveMens)
-                .build();
-
-        moneyGiveRepository.save(moneyGive);
-
-        List<Integer> moneyList = DivideUtil.divideMoney(moneyGive);
-
-        moneyReceiveRepository.saveAll(DivideUtil.devideListSet(moneyList,moneyGive));
-
+    @Test
+    void 줍기_성공() {
+        MoneyReceive moneyReceive = moneyReceiveRepository.findAll().get(0);
+        long no = moneyReceive.getNo();
+        moneyReceive.setReceiveCheck(true);
+        moneyReceive.setReceiveMen(222);
+        moneyReceiveRepository.save(moneyReceive);
+        assertThat(moneyReceiveRepository.findById(no).get().isReceiveCheck()).isTrue();
     }
 
 }

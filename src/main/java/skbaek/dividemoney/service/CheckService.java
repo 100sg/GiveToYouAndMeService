@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import skbaek.dividemoney.common.ExceptionString;
 import skbaek.dividemoney.dto.DivideRequestDto;
 import skbaek.dividemoney.dto.DivideResponseDto;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.entity.MoneyReceive;
-import skbaek.dividemoney.repository.MoneyGiveRepository;
-import skbaek.dividemoney.repository.MoneyReceiveRepository;
+import skbaek.dividemoney.entity.give.MoneyGive;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
+import skbaek.dividemoney.entity.give.MoneyGiveRepository;
+import skbaek.dividemoney.entity.receive.MoneyReceiveRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,25 +21,24 @@ import java.util.stream.Collectors;
 @Service
 public class CheckService {
 
-    private final MoneyReceiveRepository receiveRepository;
     private final MoneyGiveRepository giveRepository;
 
     @Transactional(readOnly = true)
     public DivideResponseDto save(DivideRequestDto requestDto){
 
-        Optional<MoneyGive> moneyGive = giveRepository.findByTokenEqualsAndUserIdEqualsAndWhichRoomEqualsAndGiveTimeGreaterThanEqual(
-                requestDto.getToken(), requestDto.getUserId(), requestDto.getWhichRoom(), LocalDateTime.now().minusDays(7L) );
+        int userId = requestDto.getUserId();
+        String roomId = requestDto.getWhichRoom();
+        String token = requestDto.getToken();
 
-        //7일이 지났거나 조회할 정보가 없을때
-        if(!moneyGive.isPresent()) throw new IllegalArgumentException(ExceptionString.NOT_INFO.getMsg());
+        MoneyGive moneyGive = giveRepository.findByTokenEqualsAndUserIdNotAndWhichRoomEquals(
+                token, userId, roomId );
 
         DivideResponseDto responseDto = new DivideResponseDto();
-        if(moneyGive.isPresent()){
-            MoneyGive data = moneyGive.get();
-            responseDto.setGiveTime(data.getGiveTime());
-            responseDto.setGiveMoney(data.getGiveMoney());
+        if( moneyGive != null ){
+            responseDto.setGiveTime(moneyGive.getGiveTime());
+            responseDto.setGiveMoney(moneyGive.getGiveMoney());
 
-            List<MoneyReceive> list = data.getReceiveList().stream().filter(tmp -> tmp.isReceiveCheck()).collect(Collectors.toList());
+            List<MoneyReceive> list = moneyGive.getReceiveList().stream().filter(tmp -> tmp.isReceiveCheck()).collect(Collectors.toList());
             List<Map<String, Integer>> receivedMensList = new ArrayList<>();
             int totalSeed = 0;
 
@@ -52,6 +51,9 @@ public class CheckService {
             }
             responseDto.setReceivedMoney(totalSeed);
             responseDto.setReceiveList(receivedMensList);
+        } else {
+            //7일이 지났거나 조회할 정보가 없을때
+            throw new IllegalArgumentException(ExceptionString.NOT_INFO.getMsg());
         }
 
         return responseDto;

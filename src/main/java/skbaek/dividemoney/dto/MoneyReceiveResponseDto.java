@@ -1,21 +1,17 @@
 package skbaek.dividemoney.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import skbaek.dividemoney.entity.MoneyGive;
-import skbaek.dividemoney.entity.MoneyReceive;
-import skbaek.dividemoney.util.TokenUtil;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
 
-import java.time.LocalDateTime;
-
-@Getter
+@Setter @Getter
+@NoArgsConstructor
 public class MoneyReceiveResponseDto {
     private int receiveMoney;
 
-    public MoneyReceiveResponseDto(MoneyReceive entity){
-        this.receiveMoney = entity.getReceiveMoney();
+    public MoneyReceiveResponseDto(int money){
+        this.receiveMoney = money;
     }
 
 }

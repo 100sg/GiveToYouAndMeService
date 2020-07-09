@@ -1,13 +1,14 @@
-package skbaek.dividemoney.entity;
+package skbaek.dividemoney.entity.receive;
 
 import lombok.*;
-import org.aspectj.weaver.patterns.IToken;
+import skbaek.dividemoney.entity.give.MoneyGive;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 public class MoneyReceive {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,7 @@ public class MoneyReceive {
     private boolean receiveCheck;
     private int receivedHistory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "GIVE_TOKEN")
     private MoneyGive moneyGive;
 

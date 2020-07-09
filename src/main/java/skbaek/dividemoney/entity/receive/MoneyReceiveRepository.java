@@ -1,11 +1,7 @@
-package skbaek.dividemoney.repository;
+package skbaek.dividemoney.entity.receive;
 
-import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
-import skbaek.dividemoney.entity.MoneyReceive;
-
-import java.util.List;
-import java.util.Optional;
+import skbaek.dividemoney.entity.receive.MoneyReceive;
 
 public interface MoneyReceiveRepository extends JpaRepository<MoneyReceive, Long> {
 
